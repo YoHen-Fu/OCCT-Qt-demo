@@ -1,4 +1,4 @@
-function MeshInfExtract(file)
+function MeshInfExtract(file, output_path)
 
 %%
 %  网格参数
@@ -64,6 +64,6 @@ fclose(fid);
 element_P = element(isnan(element(:, 3)), 1:2);  %点单元
 element_L = element(isnan(element(:, 4))&~isnan(element(:, 3)), 1:3);  %线单元
 element_S = element(isnan(element(:, 5))&~isnan(element(:, 4))&~isnan(element(:, 3)), 1:4);  %面单元
-% element_V = element(isnan(element(:, 6))&~isnan(element(:, 5))&~isnan(element(:, 4))&~isnan(element(:, 3)), 1:5);  %面单元
-save('meshInf.mat', 'coord', 'element_P', 'element_L', 'element_S');
+element_V = element(~isnan(element(:, 5)), 1:5);  %面单元
+save(output_path+"\meshInf.mat", 'coord', 'element_P', 'element_L', 'element_S', 'element_V');
 end
