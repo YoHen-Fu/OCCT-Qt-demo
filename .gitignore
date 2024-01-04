@@ -28,3 +28,7 @@ codegen/
 
 # Octave session info
 octave-workspace
+
+app.zip
+
+tmp

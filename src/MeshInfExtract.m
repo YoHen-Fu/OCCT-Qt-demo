@@ -42,7 +42,7 @@ while(data ~= -1)
         data = textscan(fid,FormatString,1);
         [~, numElements, minElementTag, maxElementTag] = data{:};
 
-        element = zeros(maxElementTag - minElementTag, 5);    %单元
+        element = zeros(maxElementTag - minElementTag, 6);    %单元
         index_element = 1;
         while(index_element ~= maxElementTag-minElementTag+2)
             FormatString=repmat('%f',1,4);
@@ -52,7 +52,7 @@ while(data ~= -1)
             data = cell2mat( textscan(fid, FormatString, numElementsInBlock) );
 
             element(index_element:index_element+numElementsInBlock-1, :) = ...
-                data(1:numElementsInBlock, :);
+                [entityTag*ones(numElementsInBlock, 1), data(1:numElementsInBlock, :)];
             index_element = index_element + numElementsInBlock;
         end
         element_flag = 1;
@@ -61,9 +61,23 @@ while(data ~= -1)
 end
 % save('meshInf.mat', 'coord', 'element');
 fclose(fid);
-element_P = element(isnan(element(:, 3)), 1:2);  %点单元
-element_L = element(isnan(element(:, 4))&~isnan(element(:, 3)), 1:3);  %线单元
-element_S = element(isnan(element(:, 5))&~isnan(element(:, 4))&~isnan(element(:, 3)), 1:4);  %面单元
-element_V = element(~isnan(element(:, 5)), 1:5);  %面单元
+element_P = element(isnan(element(:, 4)), 1:3);  %点单元
+element_L = element(isnan(element(:, 5))&~isnan(element(:, 4)), 1:4);  %线单元
+element_S = element(isnan(element(:, 6))&~isnan(element(:, 5))&~isnan(element(:, 4)), 1:5);  %面单元
+element_V = element(~isnan(element(:, 6)), 1:6);  %面单元
+
+if(~isempty(element_P))
+    element_P(:, 2) = element_P(:, 2) - element_P(1, 2) + 1;
+end
+if(~isempty(element_L))
+    element_L(:, 2) = element_L(:, 2) - element_L(1, 2) + 1;
+end
+if(~isempty(element_S))
+    element_S(:, 2) = element_S(:, 2) - element_S(1, 2) + 1;
+end
+if(~isempty(element_V))
+    element_V(:, 2) = element_V(:, 2) - element_V(1, 2) + 1;
+end
+
 save(output_path+"\meshInf.mat", 'coord', 'element_P', 'element_L', 'element_S', 'element_V');
 end
