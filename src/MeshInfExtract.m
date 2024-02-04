@@ -1,4 +1,4 @@
-function MeshInfExtract(file, output_path)
+function MeshInf = MeshInfExtract(file)
 
 %%
 %  网格参数
@@ -79,5 +79,10 @@ if(~isempty(element_V))
     element_V(:, 2) = element_V(:, 2) - element_V(1, 2) + 1;
 end
 
-save(output_path+"\meshInf.mat", 'coord', 'element_P', 'element_L', 'element_S', 'element_V');
+MeshInf.coord = coord;
+MeshInf.element_P = element_P;
+MeshInf.element_L = element_L;
+MeshInf.element_S = element_S;
+MeshInf.element_V = element_V;
+% save(output_path+"\meshInf.mat", 'coord', 'element_P', 'element_L', 'element_S', 'element_V');
 end
