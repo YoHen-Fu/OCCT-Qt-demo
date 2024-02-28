@@ -6,15 +6,17 @@ MeshInf可一键提取Gmsh网格源文件中的信息，并生成`MeshInf.mat`�
 
 ## 当前功能
 
-支持解析二维三角形、三维四面体网格信息。
+当前支持解析二维三角形网格信息。
 
 ## 使用说明
 
 软件运行界面如下：
 
-<img title="" src="./doc/figure/APP.png" alt="" width="379" data-align="center">
+<img title="" src="./doc/figure/APP1.png" alt="" width="379" data-align="center">
 
-点击“打开”按钮，选择Gmsh生成的网格源文件（`.msh`后缀的文件），点击“输出网格信息文件”选择输出路径，即可在选择的路径下生成`MeshInf.mat`文件，方便MATLAB读取。
+<img title="" src="./doc/figure/APP2.png" alt="" data-align="center" width="379">
+
+<img title="" src="./doc/figure/APP3.png" alt="" data-align="center" width="380">
 
 ## 输出数据说明
 
