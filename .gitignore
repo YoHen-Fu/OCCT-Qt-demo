@@ -30,3 +30,10 @@
 *.exe
 *.out
 *.app
+
+# 忽略build目录
+**/build*/
+
+**/CMakeLists.txt.user
+
+**/bin/
