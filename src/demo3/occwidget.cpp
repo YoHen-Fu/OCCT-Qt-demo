@@ -55,17 +55,17 @@ void OCCWidget::resizeEvent( QResizeEvent* /*theEvent*/ )
 }
 
 void OCCWidget::mousePressEvent(QMouseEvent* event){
-    //平移 鼠标右键+shift
+    //平移 鼠标右键
     if ((event->buttons() & Qt::RightButton))
     {
         m_mode = Action3d_Panning;
         m_x = event->pos().x();
         m_y = event->pos().y();
     }
-    else if (event->buttons() & Qt::MiddleButton)//旋转
+    //旋转 鼠标中键
+    else if (event->buttons() & Qt::MiddleButton)
     {
         m_mode = Action3d_Rotation;
-        //开始旋转视图围绕屏幕轴
         m_view->StartRotation(m_dpiScale*event->pos().x(), m_dpiScale*event->pos().y());
     }
 }
