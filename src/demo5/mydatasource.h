@@ -7,11 +7,22 @@
 struct ElementData {
     Standard_Integer ID; // 元素标识符
     std::vector<Standard_Integer> nodes; // 组成元素的节点 ID 列表
+    ElementData(Standard_Integer ID_, std::vector<Standard_Integer> nodes_){
+        ID = ID_;
+        nodes = nodes_;
+    }
 };
 
 struct NodeData {
     Standard_Integer ID; // 节点标识符
     Standard_Real x, y, z; // 节点的坐标
+
+    NodeData(Standard_Integer ID_, Standard_Real x_, Standard_Real y_, Standard_Real z_){
+        ID = ID_;
+        x = x_;
+        y = y_;
+        z = z_;
+    }
 
     Standard_Real X() const { return x; }
     Standard_Real Y() const { return y; }
@@ -23,6 +34,10 @@ struct NodeData {
 struct GroupData {
     Standard_Integer ID; // 组标识符
     std::vector<Standard_Integer> elements; // 组成组的元素 ID 列表
+    GroupData(Standard_Integer ID_, std::vector<Standard_Integer> elements_){
+        ID = ID_;
+        elements = elements_;
+    }
 };
 
 class MyDataSource : public MeshVS_DataSource

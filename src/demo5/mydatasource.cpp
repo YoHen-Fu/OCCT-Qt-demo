@@ -16,13 +16,13 @@ const ElementData* MyDataSource::GetElementData(const Standard_Integer ID) const
 const NodeData* MyDataSource::GetNodeData(const Standard_Integer ID) const {
     // 实现获取节点数据结构的逻辑
     // 假设节点数据存储在一个 vector 中
-    static std::vector<NodeData> nodes = {
-        { 0, 0, 0 }, // 节点1：坐标 (0, 0, 0)
-        { 1, 0, 0 }, // 节点2：坐标 (1, 0, 0)
-        { 0, 1, 0 }  // 节点3：坐标 (0, 1, 0)
+    static std::vector<NodeData> nodes1 = {
+        {1, 0, 0, 0 }, // 节点1：坐标 (0, 0, 0)
+        {2, 100, 0, 0 }, // 节点2：坐标 (100, 0, 0)
+        {3, 0, 100, 0 }  // 节点3：坐标 (0, 100, 0)
     };
-    if (ID < 1 || ID > nodes.size()) return nullptr;
-    return &nodes[ID - 1];
+    if (ID < 1 || ID > nodes1.size()) return nullptr;
+    return &nodes1[ID - 1];
 }
 
 // 假设的辅助方法，用于获取组数据结构的地址
@@ -40,12 +40,12 @@ const GroupData* MyDataSource::GetGroupData(const Standard_Integer ID) const {
 const std::vector<NodeData>& MyDataSource::GetAllNodeData() const {
     // 实现获取所有节点数据的逻辑
     // 假设节点数据存储在一个 vector 中
-    static std::vector<NodeData> nodes = {
+    static std::vector<NodeData> nodes2 = {
         { 1, 0, 0, 0 }, // 节点1：标识符 1，坐标 (0, 0, 0)
-        { 2, 1, 0, 0 }, // 节点2：标识符 2，坐标 (1, 0, 0)
-        { 3, 0, 1, 0 }  // 节点3：标识符 3，坐标 (0, 1, 0)
+        { 2, 100, 0, 0 }, // 节点2：标识符 2，坐标 (100, 0, 0)
+        { 3, 0, 100, 0 }  // 节点3：标识符 3，坐标 (0, 100, 0)
     };
-    return nodes;
+    return nodes2;
 }
 
 // 假设的辅助方法，用于获取所有元素数据

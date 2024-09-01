@@ -35,7 +35,7 @@ OCCWidget::OCCWidget(QWidget *parent)
     // 绘制立方体
     TopoDS_Shape box = 	BRepPrimAPI_MakeBox(100, 100, 100);
     Handle(AIS_Shape) box_AIS = new AIS_Shape(box);
-    // m_context->Display(box_AIS, Standard_True);
+    m_context->Display(box_AIS, Standard_True);
 
     Handle(MeshVS_Mesh) aMesh = new MeshVS_Mesh();
     MyDataSource* aDataSource = new MyDataSource();
