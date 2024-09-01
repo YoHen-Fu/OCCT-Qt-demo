@@ -7,7 +7,10 @@ const ElementData* MyDataSource::GetElementData(const Standard_Integer ID) const
     // 实现获取元素数据结构的逻辑
     // 假设元素数据存储在一个 vector 中
     static std::vector<ElementData> elements = {
-        {1, {1, 2, 3}} // 元素1：由节点1、节点2和节点3组成
+        {1, {1, 2, 3}}, // 元素1：由节点1、节点2和节点3组成
+        {2, {1, 2, 4}},
+        {3, {2, 3, 4}},
+        {4, {3, 4, 1}}
     };
     if (ID < 1 || ID > elements.size()) return nullptr;
     return &elements[ID - 1];
@@ -19,7 +22,8 @@ const NodeData* MyDataSource::GetNodeData(const Standard_Integer ID) const {
     static std::vector<NodeData> nodes1 = {
         {1, 0, 0, 0 }, // 节点1：坐标 (0, 0, 0)
         {2, 100, 0, 0 }, // 节点2：坐标 (100, 0, 0)
-        {3, 0, 100, 0 }  // 节点3：坐标 (0, 100, 0)
+        {3, 0, 100, 0 },  // 节点3：坐标 (0, 100, 0)
+        {4, 100, 100, 100}
     };
     if (ID < 1 || ID > nodes1.size()) return nullptr;
     return &nodes1[ID - 1];
@@ -30,7 +34,7 @@ const GroupData* MyDataSource::GetGroupData(const Standard_Integer ID) const {
     // 实现获取组数据的逻辑
     // 假设组数据存储在一个 vector 中
     static std::vector<GroupData> groups = {
-        { 1, {1} }, // 组1：标识符 1，包含元素1和元素2
+        { 1, {1, 2, 3, 4} }, // 组1：标识符 1，包含元素1和元素2
     };
     if (ID < 1 || ID > groups.size()) return nullptr;
     return &groups[ID - 1];
@@ -43,7 +47,8 @@ const std::vector<NodeData>& MyDataSource::GetAllNodeData() const {
     static std::vector<NodeData> nodes2 = {
         { 1, 0, 0, 0 }, // 节点1：标识符 1，坐标 (0, 0, 0)
         { 2, 100, 0, 0 }, // 节点2：标识符 2，坐标 (100, 0, 0)
-        { 3, 0, 100, 0 }  // 节点3：标识符 3，坐标 (0, 100, 0)
+        { 3, 0, 100, 0 },  // 节点3：标识符 3，坐标 (0, 100, 0)
+        {4, 100, 100, 100}
     };
     return nodes2;
 }
@@ -53,7 +58,10 @@ const std::vector<ElementData>& MyDataSource::GetAllElementData() const {
     // 实现获取所有元素数据的逻辑
     // 假设元素数据存储在一个 vector 中
     static std::vector<ElementData> elements = {
-        { 1, {1, 2, 3} }, // 元素1：标识符 1，由节点1、节点2和节点3组成
+        {1, {1, 2, 3}}, // 元素1：由节点1、节点2和节点3组成
+        {2, {1, 2, 4}},
+        {3, {2, 3, 4}},
+        {4, {3, 4, 1}}
     };
     return elements;
 }
@@ -63,7 +71,7 @@ const std::vector<GroupData>& MyDataSource::GetAllGroupData() const {
     // 实现获取所有组数据的逻辑
     // 假设组数据存储在一个 vector 中
     static std::vector<GroupData> groups = {
-        { 1, {1} }, // 组1：标识符 1，包含元素1和元素2
+        { 1, {1, 2, 3, 4} }, // 组1：标识符 1，包含元素1和元素2
     };
     return groups;
 }

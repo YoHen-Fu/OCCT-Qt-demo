@@ -9,6 +9,9 @@
 
 // 临时头文件
 #include <MeshVS_Mesh.hxx>
+#include <MeshVS_MeshPrsBuilder.hxx>
+#include <MeshVS_Drawer.hxx>
+#include <MeshVS_DrawerAttribute.hxx>
 #include "mydatasource.h"
 
 OCCWidget::OCCWidget(QWidget *parent)
@@ -35,12 +38,41 @@ OCCWidget::OCCWidget(QWidget *parent)
     // 绘制立方体
     TopoDS_Shape box = 	BRepPrimAPI_MakeBox(100, 100, 100);
     Handle(AIS_Shape) box_AIS = new AIS_Shape(box);
-    m_context->Display(box_AIS, Standard_True);
+    // m_context->Display(box_AIS, Standard_True);
 
     Handle(MeshVS_Mesh) aMesh = new MeshVS_Mesh();
     MyDataSource* aDataSource = new MyDataSource();
     aMesh->SetDataSource(aDataSource);
 
+    // 创建MeshVS_MeshPrsBuilder
+    Handle(MeshVS_MeshPrsBuilder) aBuilder = new MeshVS_MeshPrsBuilder(aMesh);
+    aMesh->AddBuilder(aBuilder, Standard_True);
+
+    // 创建Drawer并设置显示样式
+    Handle(MeshVS_Drawer) aDrawer = aMesh->GetDrawer();
+    if (!aDrawer.IsNull())
+    {
+        // 设置网格面颜色
+        Quantity_Color aFaceColor(Quantity_NOC_GREEN);
+        aDrawer->SetColor(MeshVS_DA_InteriorColor, aFaceColor);
+
+        // 设置网格线宽
+        aDrawer->SetDouble(MeshVS_DA_EdgeWidth, 2.0);
+
+        // 设置网格透明度
+        // aDrawer->SetDouble(MeshVS_DA_Transparency, 0.5);
+
+        // 设置网格线颜色
+        Quantity_Color aLineColor(Quantity_NOC_RED);
+        aDrawer->SetColor(MeshVS_DA_EdgeColor, aLineColor);
+
+        aDrawer->SetBoolean(MeshVS_DA_DisplayNodes, Standard_False);
+
+        // 应用Drawer到MeshVS_Mesh
+        aMesh->SetDrawer(aDrawer);
+    }
+
+    // 将Mesh添加到AIS_InteractiveContext
     m_context->Display(aMesh, Standard_True);
 
 }

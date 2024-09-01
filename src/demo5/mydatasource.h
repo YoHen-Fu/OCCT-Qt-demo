@@ -2,6 +2,7 @@
 #define MYDATASOURCE_H
 
 #include <MeshVS_DataSource.hxx>
+#include <MeshVS_DataSource3D.hxx>
 
 // 假设的 ElementData 和 NodeData 结构体
 struct ElementData {
@@ -40,9 +41,9 @@ struct GroupData {
     }
 };
 
-class MyDataSource : public MeshVS_DataSource
+class MyDataSource : public MeshVS_DataSource3D
 {
-private:
+public:
     const ElementData* GetElementData(const Standard_Integer ID) const;
     const NodeData* GetNodeData(const Standard_Integer ID) const;
     const GroupData* GetGroupData(const Standard_Integer ID) const;
