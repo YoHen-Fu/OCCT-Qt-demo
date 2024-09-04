@@ -13,6 +13,7 @@
 #include <MeshVS_Drawer.hxx>
 #include <MeshVS_DrawerAttribute.hxx>
 #include <MeshVS_NodalColorPrsBuilder.hxx>
+#include <MeshVS_ElementalColorPrsBuilder.hxx>
 #include "mydatasource3D.h"
 #include "mydatasource.h"
 
@@ -90,15 +91,19 @@ OCCWidget::OCCWidget(QWidget *parent)
     // // aMesh->AddBuilder(nodal);
 
     Handle(MeshVS_Mesh) aMesh = new MeshVS_Mesh();
-    MyDataSource* aDataSource = new MyDataSource();
-    // MyDataSource3D* aDataSource = new MyDataSource3D();
+    // MyDataSource* aDataSource = new MyDataSource();
+    MyDataSource3D* aDataSource = new MyDataSource3D();
     aMesh->SetDataSource(aDataSource);
 
     // 创建MeshVS_MeshPrsBuilder
-    Handle(MeshVS_MeshPrsBuilder) aBuilder = new MeshVS_MeshPrsBuilder(aMesh);
+    Handle(MeshVS_ElementalColorPrsBuilder) aBuilder = new MeshVS_ElementalColorPrsBuilder(aMesh, MeshVS_DMF_ElementalColorDataPrs| MeshVS_DMF_OCCMask);
+    aBuilder->SetColor1(1, Quantity_NOC_RED);
+    // Handle(MeshVS_MeshPrsBuilder) aBuilder = new MeshVS_MeshPrsBuilder(aMesh);
     aMesh->AddBuilder(aBuilder, Standard_True);
 
-    aMesh->GetDrawer()->SetColor(MeshVS_DA_EdgeColor,Quantity_NOC_BLACK);//线颜色
+    // aMesh->GetDrawer()->SetColor(MeshVS_DA_EdgeColor,Quantity_NOC_BLACK);//线颜色
+    // aMesh->GetDrawer()->SetColor(MeshVS_DA_InteriorColor, Quantity_NOC_BLACK);
+
 
     // 将Mesh添加到AIS_InteractiveContext
     m_context->Display(aMesh, Standard_True);
