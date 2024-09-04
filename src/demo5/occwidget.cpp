@@ -13,6 +13,7 @@
 #include <MeshVS_Drawer.hxx>
 #include <MeshVS_DrawerAttribute.hxx>
 #include <MeshVS_NodalColorPrsBuilder.hxx>
+#include "mydatasource3D.h"
 #include "mydatasource.h"
 
 
@@ -50,6 +51,7 @@ OCCWidget::OCCWidget(QWidget *parent)
     m_context = new AIS_InteractiveContext(m_viewer);
     // 创建视图，并关联到3D查看器
     m_view = m_viewer->CreateView();
+    m_view->SetBgGradientColors(Quantity_NOC_GRAY, Quantity_NOC_WHITE, Aspect_GFM_VER);
     // 获取窗口句柄并创建OCCT_Window
     OCCT_Window* wind = new OCCT_Window(this);
     // 设置视图窗口
@@ -60,37 +62,43 @@ OCCWidget::OCCWidget(QWidget *parent)
     Handle(AIS_Shape) box_AIS = new AIS_Shape(box);
     // m_context->Display(box_AIS, Standard_True);
 
+    // Handle(MeshVS_Mesh) aMesh = new MeshVS_Mesh();
+    // MyDataSource3D* aDataSource = new MyDataSource3D();
+    // aMesh->SetDataSource(aDataSource);
+
+    // // 创建MeshVS_MeshPrsBuilder
+    // Handle(MeshVS_MeshPrsBuilder) aBuilder = new MeshVS_MeshPrsBuilder(aMesh);
+    // aMesh->AddBuilder(aBuilder, Standard_True);
+
+    // aMesh->GetDrawer()->SetColor(MeshVS_DA_EdgeColor,Quantity_NOC_BLACK);//线颜色
+    // // aMesh->GetDrawer()->SetColor(MeshVS_DA_VectorColor,Quantity_NOC_BLUE);//点颜色
+    // // aMesh->GetDrawer()->SetColor(MeshVS_DA_InteriorColor, Quantity_NOC_BLUE);//体颜色
+    // aMesh->GetDrawer()->SetBoolean(MeshVS_DA_ShowEdges, Standard_True);//显示线
+
+    // aMesh->GetDrawer()->SetBoolean(MeshVS_DA_DisplayNodes, Standard_True);//显示点
+    // // // aMesh->SetDisplayMode(MeshVS_DMF_Shading);//显示模式
+    // // // aMesh->SetMeshSelMethod(MeshVS_MSM_PRECISE);//选择模式
+
+    // // MeshVS_DisplayModeFlags displayMode =  MeshVS_DMF_Shading;
+    // // aMesh->SetDisplayMode(displayMode);
+
+    // // std::vector<double> tt{0, 10, 1, 1};
+    // // MeshVS_DataMapOfIntegerColor colormap = getMeshDataMap(tt, 10, 0);
+    // // Handle(MeshVS_NodalColorPrsBuilder) nodal = new MeshVS_NodalColorPrsBuilder(aMesh, MeshVS_DMF_NodalColorDataPrs | MeshVS_DMF_OCCMask);
+    // // nodal->SetColors(colormap);
+    // // // mesh->setDistRadio(distRadio);
+    // // aMesh->AddBuilder(nodal);
+
     Handle(MeshVS_Mesh) aMesh = new MeshVS_Mesh();
     MyDataSource* aDataSource = new MyDataSource();
+    // MyDataSource3D* aDataSource = new MyDataSource3D();
     aMesh->SetDataSource(aDataSource);
 
     // 创建MeshVS_MeshPrsBuilder
     Handle(MeshVS_MeshPrsBuilder) aBuilder = new MeshVS_MeshPrsBuilder(aMesh);
-    // aMesh->AddBuilder(aBuilder, Standard_True);
+    aMesh->AddBuilder(aBuilder, Standard_True);
 
     aMesh->GetDrawer()->SetColor(MeshVS_DA_EdgeColor,Quantity_NOC_BLACK);//线颜色
-    // aMesh->GetDrawer()->SetColor(MeshVS_DA_VectorColor,Quantity_NOC_BLUE);//点颜色
-    // aMesh->GetDrawer()->SetColor(MeshVS_DA_InteriorColor, Quantity_NOC_BLUE);//体颜色
-    // aMesh->GetDrawer()->SetBoolean(MeshVS_DA_ShowEdges, Standard_True);//显示线
-
-    // aMesh->GetDrawer()->SetBoolean(MeshVS_DA_DisplayNodes, Standard_True);//显示点
-    // // aMesh->SetDisplayMode(MeshVS_DMF_Shading);//显示模式
-    // // aMesh->SetMeshSelMethod(MeshVS_MSM_PRECISE);//选择模式
-
-    // MeshVS_DisplayModeFlags displayMode =  MeshVS_DMF_Shading;
-    // aMesh->SetDisplayMode(displayMode);
-
-    std::vector<double> tt{0, 10, 1, 1};
-    MeshVS_DataMapOfIntegerColor colormap = getMeshDataMap(tt, 10, 0);
-    Handle(MeshVS_NodalColorPrsBuilder) nodal = new MeshVS_NodalColorPrsBuilder(aMesh, MeshVS_DMF_NodalColorDataPrs | MeshVS_DMF_OCCMask);
-    nodal->SetColors(colormap);
-    // mesh->setDistRadio(distRadio);
-    aMesh->AddBuilder(nodal);
-
-
-
-
-
 
     // 将Mesh添加到AIS_InteractiveContext
     m_context->Display(aMesh, Standard_True);

@@ -1,237 +1,259 @@
 #include "mydatasource.h"
 
-MyDataSource::MyDataSource() {
-    for (Standard_Integer aNodeID = 1; aNodeID <= 4; aNodeID++)
-    {
-        m_nodes.Add( aNodeID );
-    }
+#include <Precision.hxx>
+#include <Standard_Type.hxx>
+#include <TColStd_DataMapOfIntegerReal.hxx>
 
-    for (Standard_Integer anElemID = 1; anElemID <= 1; anElemID++)
-    {
-        m_elements.Add( anElemID );
-    }
 
-    m_nodeCoords = new TColStd_HArray2OfReal(1, 16, 1, 3);
+MyDataSource::MyDataSource ()
+{
 
-    m_nodeCoords->SetValue( 1, 1, 50 );
-    m_nodeCoords->SetValue( 1, 2, 50 );
-    m_nodeCoords->SetValue( 1, 3, 200 );
 
-    m_nodeCoords->SetValue( 2, 1, 0 );
-    m_nodeCoords->SetValue( 2, 2, 100 );
-    m_nodeCoords->SetValue( 2, 3, 100 );
+    myNodeCoords = new TColStd_HArray2OfReal (1, 3, 1, 3);
+    myNodes.Add( 1 );
+    myNodeCoords->SetValue(1, 1, 0);
+    myNodeCoords->SetValue(1, 2, 100);
+    myNodeCoords->SetValue(1, 3, 0);
 
-    m_nodeCoords->SetValue( 3, 1, 100 );
-    m_nodeCoords->SetValue( 3, 2, 0 );
-    m_nodeCoords->SetValue( 3, 3, 100 );
+    myNodes.Add( 2 );
+    myNodeCoords->SetValue(2, 1, 0);
+    myNodeCoords->SetValue(2, 2, 100);
+    myNodeCoords->SetValue(2, 3, 100);
 
-    m_nodeCoords->SetValue( 4, 1, 0 );
-    m_nodeCoords->SetValue( 4, 2, 0 );
-    m_nodeCoords->SetValue( 4, 3, 100 );
+    myNodes.Add( 3 );
+    myNodeCoords->SetValue(3, 1, 0);
+    myNodeCoords->SetValue(3, 2, 0);
+    myNodeCoords->SetValue(3, 3, 0);
 
-    m_elemNbNodes = new TColStd_HArray1OfInteger(1, 5);
+    myElemNormals = new TColStd_HArray2OfReal(1, 1, 1, 3);
+    myElemNodes = new TColStd_HArray2OfInteger(1, 1, 1, 3);
 
-    m_elemNbNodes->SetValue( 1, 4 );
+    // const Poly_Triangle aTri = myMesh->Triangle (i);
 
-    m_elemNodes = new TColStd_HArray2OfInteger(1, 1, 1, 8);
+    // Standard_Integer V[3];
+    // aTri.Get (V[0], V[1], V[2]);
 
-    m_elemNodes->SetValue(1, 1, 1);
-    m_elemNodes->SetValue(1, 2, 2);
-    m_elemNodes->SetValue(1, 3, 3);
-    m_elemNodes->SetValue(1, 4, 4);
+    const gp_Pnt aP1 {0, 100, 0};
+    const gp_Pnt aP2 {0, 100, 100};
+    const gp_Pnt aP3 {0, 0, 0};
 
+    gp_Vec aV1(aP1, aP2);
+    gp_Vec aV2(aP2, aP3);
+
+    gp_Vec aN = aV1.Crossed(aV2);
+    if (aN.SquareMagnitude() > Precision::SquareConfusion())
+        aN.Normalize();
+    else
+        aN.SetCoord(0.0, 0.0, 0.0);
+
+    myElements.Add( 1 );
+    myElemNodes->SetValue(1, 1, 1);
+    myElemNodes->SetValue(1, 2, 2);
+    myElemNodes->SetValue(1, 3, 3);
+
+
+    myElemNormals->SetValue (1, 1, aN.X());
+    myElemNormals->SetValue (1, 2, aN.Y());
+    myElemNormals->SetValue (1, 3, aN.Z());
+
+
+    // myMesh = aMesh;
+
+    // if( !myMesh.IsNull() )
+    // {
+    //     const Standard_Integer aNbNodes = myMesh->NbNodes();
+    //     myNodeCoords = new TColStd_HArray2OfReal (1, aNbNodes, 1, 3);
+    //     std::cout << "Nodes : " << aNbNodes << std::endl;
+
+    //     for (Standard_Integer i = 1; i <= aNbNodes; i++)
+    //     {
+    //         myNodes.Add( i );
+    //         gp_Pnt xyz = myMesh->Node (i);
+
+    //         myNodeCoords->SetValue(i, 1, xyz.X());
+    //         myNodeCoords->SetValue(i, 2, xyz.Y());
+    //         myNodeCoords->SetValue(i, 3, xyz.Z());
+    //     }
+
+    //     const Standard_Integer aNbTris = myMesh->NbTriangles();
+    //     myElemNormals = new TColStd_HArray2OfReal(1, aNbTris, 1, 3);
+    //     myElemNodes = new TColStd_HArray2OfInteger(1, aNbTris, 1, 3);
+
+    //     std::cout << "Elements : " << aNbTris << std::endl;
+
+    //     for (Standard_Integer i = 1; i <= aNbTris; i++)
+    //     {
+    //         myElements.Add( i );
+
+    //         const Poly_Triangle aTri = myMesh->Triangle (i);
+
+    //         Standard_Integer V[3];
+    //         aTri.Get (V[0], V[1], V[2]);
+
+    //         const gp_Pnt aP1 = myMesh->Node (V[0]);
+    //         const gp_Pnt aP2 = myMesh->Node (V[1]);
+    //         const gp_Pnt aP3 = myMesh->Node (V[2]);
+
+    //         gp_Vec aV1(aP1, aP2);
+    //         gp_Vec aV2(aP2, aP3);
+
+    //         gp_Vec aN = aV1.Crossed(aV2);
+    //         if (aN.SquareMagnitude() > Precision::SquareConfusion())
+    //             aN.Normalize();
+    //         else
+    //             aN.SetCoord(0.0, 0.0, 0.0);
+
+    //         for (Standard_Integer j = 0; j < 3; j++)
+    //         {
+    //             myElemNodes->SetValue(i, j+1, V[j]);
+    //         }
+
+    //         myElemNormals->SetValue (i, 1, aN.X());
+    //         myElemNormals->SetValue (i, 2, aN.Y());
+    //         myElemNormals->SetValue (i, 3, aN.Z());
+    //     }
+    // }
+    // std::cout << "Construction is finished" << std::endl;
 }
 
-Standard_Boolean MyDataSource::GetGeom (const Standard_Integer ID,
-                                        const Standard_Boolean IsElement,
-                                        TColStd_Array1OfReal& Coords,
-                                        Standard_Integer& NbNodes,
-                                        MeshVS_EntityType& Type) const {
-    if (IsElement)
-    {
-        if (ID >= 1 && ID <= m_elements.Extent())
-        {
-            Type = MeshVS_ET_Volume;
-            NbNodes = m_elemNbNodes->Value(ID);
+//================================================================
+// Function : GetGeom
+// Purpose  :
+//================================================================
+Standard_Boolean MyDataSource::GetGeom
+    ( const Standard_Integer ID, const Standard_Boolean IsElement,
+     TColStd_Array1OfReal& Coords, Standard_Integer& NbNodes,
+     MeshVS_EntityType& Type ) const
+{
+    // if( myMesh.IsNull() )
+    //     return Standard_False;
 
-            for (Standard_Integer aNodeI = 1, aGlobCoordI = 1; aNodeI <= NbNodes; aNodeI++)
+    if( IsElement )
+    {
+        if( ID>=1 && ID<=myElements.Extent() )
+        {
+            Type = MeshVS_ET_Face;
+            NbNodes = 3;
+
+            for( Standard_Integer i = 1, k = 1; i <= 3; i++ )
             {
-                Standard_Integer anIdxNode = m_elemNodes->Value(ID, aNodeI);
-                for(Standard_Integer aCoordI = 1; aCoordI <= 3; aCoordI++, aGlobCoordI++ )
-                    Coords(aGlobCoordI) = m_nodeCoords->Value(anIdxNode, aCoordI);
+                Standard_Integer IdxNode = myElemNodes->Value(ID, i);
+                for(Standard_Integer j = 1; j <= 3; j++, k++ )
+                    Coords(k) = myNodeCoords->Value(IdxNode, j);
             }
+
             return Standard_True;
         }
         else
             return Standard_False;
     }
     else
-        if (ID >= 1 && ID <= m_nodes.Extent())
+        if( ID>=1 && ID<=myNodes.Extent() )
         {
             Type = MeshVS_ET_Node;
             NbNodes = 1;
 
-            Coords( 1 ) = m_nodeCoords->Value(ID, 1);
-            Coords( 2 ) = m_nodeCoords->Value(ID, 2);
-            Coords( 3 ) = m_nodeCoords->Value(ID, 3);
+            Coords( 1 ) = myNodeCoords->Value(ID, 1);
+            Coords( 2 ) = myNodeCoords->Value(ID, 2);
+            Coords( 3 ) = myNodeCoords->Value(ID, 3);
             return Standard_True;
         }
         else
             return Standard_False;
 }
 
-Standard_Boolean MyDataSource::MyDataSource::Get3DGeom (const Standard_Integer ID,
-                                                        Standard_Integer& NbNodes,
-                                                        Handle(MeshVS_HArray1OfSequenceOfInteger)& Data) const {
-    Handle(MeshVS_HArray1OfSequenceOfInteger) aMeshData;
-    if (ID == 1 || ID == 5)
+//================================================================
+// Function : GetGeomType
+// Purpose  :
+//================================================================
+Standard_Boolean MyDataSource::GetGeomType
+    ( const Standard_Integer,
+     const Standard_Boolean IsElement,
+     MeshVS_EntityType& Type ) const
+{
+    if( IsElement )
     {
-        aMeshData = new MeshVS_HArray1OfSequenceOfInteger(1,4);
-        NbNodes = 4;
-        for (Standard_Integer anElemI = 1; anElemI <= 4; anElemI++)
-        {
-            aMeshData->ChangeValue(anElemI).Append( (anElemI - 1) % 4 );
-            aMeshData->ChangeValue(anElemI).Append( anElemI % 4 );
-            aMeshData->ChangeValue(anElemI).Append( (anElemI + 1) % 4 );
-        }
-        Data = aMeshData;
+        Type = MeshVS_ET_Face;
         return Standard_True;
     }
-
-    if (ID == 2 || ID == 4)
+    else
     {
-        aMeshData = new MeshVS_HArray1OfSequenceOfInteger(1,6);
-        NbNodes = 8;
-        for (Standard_Integer anElemI = 1, k = 1; anElemI <= 4; anElemI++)
-        {
-            aMeshData->ChangeValue(anElemI).Append( (k - 1) % 8 );
-            aMeshData->ChangeValue(anElemI).Append( k % 8 );
-            aMeshData->ChangeValue(anElemI).Append( (k + 1) % 8 );
-            aMeshData->ChangeValue(anElemI).Append( (k + 2) % 8 );
-            k+=2;
-        }
-
-        aMeshData->ChangeValue(5).Append( 0 );
-        aMeshData->ChangeValue(5).Append( 3 );
-        aMeshData->ChangeValue(5).Append( 4 );
-        aMeshData->ChangeValue(5).Append( 7 );
-
-        aMeshData->ChangeValue(6).Append( 1 );
-        aMeshData->ChangeValue(6).Append( 2 );
-        aMeshData->ChangeValue(6).Append( 5 );
-        aMeshData->ChangeValue(6).Append( 6 );
-
-        Data = aMeshData;
+        Type = MeshVS_ET_Node;
         return Standard_True;
     }
-
-    if (ID == 3)
-    {
-        aMeshData = new MeshVS_HArray1OfSequenceOfInteger(1,5);
-        NbNodes = 6;
-        for (Standard_Integer anElemI = 1; anElemI <= 2; anElemI++)
-        {
-            aMeshData->ChangeValue(anElemI).Append( (anElemI - 1) * 3 );
-            aMeshData->ChangeValue(anElemI).Append( (anElemI - 1) * 3 + 1 );
-            aMeshData->ChangeValue(anElemI).Append( (anElemI - 1) * 3 + 2 );
-        }
-        for (Standard_Integer anElemI = 1; anElemI <= 3; anElemI++)
-        {
-            aMeshData->ChangeValue(2 + anElemI).Append( (anElemI - 1) % 3 );
-            aMeshData->ChangeValue(2 + anElemI).Append( anElemI % 3 );
-            aMeshData->ChangeValue(2 + anElemI).Append( anElemI % 3 + 3 );
-            aMeshData->ChangeValue(2 + anElemI).Append( (anElemI - 1) % 3 + 3 );
-        }
-        Data = aMeshData;
-        return Standard_True;
-    }
-
-    return Standard_False;
 }
 
-Standard_Boolean MyDataSource::GetGeomType (const Standard_Integer ID,
-                                           const Standard_Boolean IsElement,
-                                           MeshVS_EntityType& Type) const {
-    if (IsElement) {
-        if (ID >= 1 && ID <= m_elements.Extent())
-        {
-            Type = MeshVS_ET_Volume;
-            return Standard_True;
-        }
-    }
-    else {
-        if (ID >= 1 && ID <= m_nodes.Extent())
-        {
-            Type = MeshVS_ET_Node;
-            return Standard_True;
-        }
+//================================================================
+// Function : GetAddr
+// Purpose  :
+//================================================================
+Standard_Address MyDataSource::GetAddr
+    ( const Standard_Integer, const Standard_Boolean ) const
+{
+    return NULL;
+}
+
+//================================================================
+// Function : GetNodesByElement
+// Purpose  :
+//================================================================
+Standard_Boolean MyDataSource::GetNodesByElement
+    ( const Standard_Integer ID,
+     TColStd_Array1OfInteger& theNodeIDs,
+     Standard_Integer& /*theNbNodes*/ ) const
+{
+    // if( myMesh.IsNull() )
+    //     return Standard_False;
+
+    if( ID>=1 && ID<=myElements.Extent() && theNodeIDs.Length() >= 3 )
+    {
+        Standard_Integer aLow = theNodeIDs.Lower();
+        theNodeIDs (aLow)     = myElemNodes->Value(ID, 1 );
+        theNodeIDs (aLow + 1) = myElemNodes->Value(ID, 2 );
+        theNodeIDs (aLow + 2) = myElemNodes->Value(ID, 3 );
+        return Standard_True;
     }
     return Standard_False;
 }
 
-Standard_Address MyDataSource::GetAddr (const Standard_Integer ID,
-                                        const Standard_Boolean IsElement) const {
-    return nullptr;
+//================================================================
+// Function : GetAllNodes
+// Purpose  :
+//================================================================
+const TColStd_PackedMapOfInteger& MyDataSource::GetAllNodes() const
+{
+    return myNodes;
 }
 
-Standard_Boolean MyDataSource::GetNodesByElement (const Standard_Integer ID,
-                                                  TColStd_Array1OfInteger& NodeIDs,
-                                                  Standard_Integer& NbNodes) const {
-    Standard_Integer aLow;
-    if (ID == 1 || ID == 5)
+//================================================================
+// Function : GetAllElements
+// Purpose  :
+//================================================================
+const TColStd_PackedMapOfInteger& MyDataSource::GetAllElements() const
+{
+    return myElements;
+}
+
+//================================================================
+// Function : GetNormal
+// Purpose  :
+//================================================================
+Standard_Boolean MyDataSource::GetNormal
+    ( const Standard_Integer Id, const Standard_Integer Max,
+     Standard_Real& nx, Standard_Real& ny,Standard_Real& nz ) const
+{
+    // if( myMesh.IsNull() )
+    //     return Standard_False;
+
+    if( Id>=1 && Id<=myElements.Extent() && Max>=3 )
     {
-        NbNodes = 4;
-        aLow = NodeIDs.Lower();
-        NodeIDs (aLow)     = m_elemNodes->Value(ID, 1 );
-        NodeIDs (aLow + 1) = m_elemNodes->Value(ID, 2 );
-        NodeIDs (aLow + 2) = m_elemNodes->Value(ID, 3 );
-        NodeIDs (aLow + 3) = m_elemNodes->Value(ID, 4 );
+        nx = myElemNormals->Value(Id, 1);
+        ny = myElemNormals->Value(Id, 2);
+        nz = myElemNormals->Value(Id, 3);
         return Standard_True;
     }
-
-    if (ID == 2 || ID == 4)
-    {
-        NbNodes = 8;
-        aLow = NodeIDs.Lower();
-        NodeIDs (aLow)     = m_elemNodes->Value(ID, 1 );
-        NodeIDs (aLow + 1) = m_elemNodes->Value(ID, 2 );
-        NodeIDs (aLow + 2) = m_elemNodes->Value(ID, 3 );
-        NodeIDs (aLow + 3) = m_elemNodes->Value(ID, 4 );
-        NodeIDs (aLow + 4) = m_elemNodes->Value(ID, 5 );
-        NodeIDs (aLow + 5) = m_elemNodes->Value(ID, 6 );
-        NodeIDs (aLow + 6) = m_elemNodes->Value(ID, 7 );
-        NodeIDs (aLow + 7) = m_elemNodes->Value(ID, 8 );
-        return Standard_True;
-    }
-
-    if (ID == 3)
-    {
-        NbNodes = 6;
-        aLow = NodeIDs.Lower();
-        NodeIDs (aLow)     = m_elemNodes->Value(ID, 1 );
-        NodeIDs (aLow + 1) = m_elemNodes->Value(ID, 2 );
-        NodeIDs (aLow + 2) = m_elemNodes->Value(ID, 3 );
-        NodeIDs (aLow + 3) = m_elemNodes->Value(ID, 4 );
-        NodeIDs (aLow + 4) = m_elemNodes->Value(ID, 5 );
-        NodeIDs (aLow + 5) = m_elemNodes->Value(ID, 6 );
-        return Standard_True;
-    }
-
-    return Standard_False;
+    else
+        return Standard_False;
 }
 
-const TColStd_PackedMapOfInteger& MyDataSource::GetAllNodes() const {
-    return m_nodes;
-}
 
-const TColStd_PackedMapOfInteger& MyDataSource::GetAllElements() const {
-    return m_elements;
-}
-
-Standard_Boolean MyDataSource::GetNormal (const Standard_Integer Id,
-                                          const Standard_Integer Max,
-                                          Standard_Real& nx,
-                                          Standard_Real& ny,
-                                          Standard_Real& nz) const {
-    return Standard_False;
-}
