@@ -14,6 +14,7 @@
 #include <MeshVS_DrawerAttribute.hxx>
 #include <MeshVS_NodalColorPrsBuilder.hxx>
 #include <MeshVS_ElementalColorPrsBuilder.hxx>
+#include "mydatasource3D.h"
 #include "mydatasource.h"
 
 
@@ -26,31 +27,9 @@ MeshVS_DataMapOfIntegerColor getMeshDataMap(std::vector<double> tt, double max, 
     for (double t : tt)
     {
         a = (t - min) / (max - min);
-        // r = a;
-        // b = 1 - a;
-        // g = 1 - ((r - b) < 0 ? b - r : r - b);
-        // 根据归一化的值生成彩虹颜色
-        if (a <= 0.25) {
-            // 红到橙
-            r = 1.0;
-            g = a * 4;
-            b = 0.0;
-        } else if (a <= 0.5) {
-            // 橙到黄
-            r = 1.0 - (a - 0.25) * 4;
-            g = 1.0;
-            b = 0.0;
-        } else if (a <= 0.75) {
-            // 黄到绿
-            r = 0.0;
-            g = 1.0;
-            b = (a - 0.5) * 4;
-        } else {
-            // 绿到蓝
-            r = 0.0;
-            g = 1.0 - (a - 0.75) * 4;
-            b = 1.0;
-        }
+        r = a;
+        b = 1 - a;
+        g = 1 - ((r - b) < 0 ? b - r : r - b);
         colormap.Bind(index + 1, Quantity_Color(r, g, b, Quantity_TOC_RGB));
         index++;
     }
@@ -81,7 +60,8 @@ OCCWidget::OCCWidget(QWidget *parent)
     if (!wind->IsMapped()) wind->Map();
 
     Handle(MeshVS_Mesh) aMesh = new MeshVS_Mesh();
-    MyDataSource* aDataSource = new MyDataSource();
+    // MyDataSource* aDataSource = new MyDataSource();
+    MyDataSource3D* aDataSource = new MyDataSource3D();
     aMesh->SetDataSource(aDataSource);
 
     // 创建MeshVS_MeshPrsBuilder
@@ -98,10 +78,11 @@ OCCWidget::OCCWidget(QWidget *parent)
     // MeshVS_DisplayModeFlags displayMode =  MeshVS_DMF_Shading;
     // aMesh->SetDisplayMode(displayMode);
 
-    std::vector<double> tt{0, 255, 125};
-    MeshVS_DataMapOfIntegerColor colormap = getMeshDataMap(tt, 255, 0);
+    std::vector<double> tt{0, 10, 1, 1};
+    MeshVS_DataMapOfIntegerColor colormap = getMeshDataMap(tt, 10, 0);
     Handle(MeshVS_NodalColorPrsBuilder) nodal = new MeshVS_NodalColorPrsBuilder(aMesh, MeshVS_DMF_NodalColorDataPrs | MeshVS_DMF_OCCMask);
     nodal->SetColors(colormap);
+    // mesh->setDistRadio(distRadio);
     aMesh->AddBuilder(nodal);
 
     // 将Mesh添加到AIS_InteractiveContext

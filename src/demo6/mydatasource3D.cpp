@@ -39,7 +39,6 @@ MyDataSource3D::MyDataSource3D() {
     m_elemNodes->SetValue(1, 2, 2);
     m_elemNodes->SetValue(1, 3, 3);
     m_elemNodes->SetValue(1, 4, 4);
-
 }
 
 Standard_Boolean MyDataSource3D::GetGeom (const Standard_Integer ID,

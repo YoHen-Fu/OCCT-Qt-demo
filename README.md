@@ -1,6 +1,26 @@
 ## 博客
 
-[Open CASCADE+Qt 那些事](https://blog.csdn.net/qq_41666999/category_12712785.html)
+## [Open CASCADE+Qt 那些事](https://blog.csdn.net/qq_41666999/category_12712785.html)
+
+### demo1
+
+[Open CASCADE+Qt：实现简单的显示窗口（上）](https://blog.csdn.net/qq_41666999/article/details/140003336)
+
+### demo2
+
+[Open CASCADE+Qt：实现简单的显示窗口（下）](https://blog.csdn.net/qq_41666999/article/details/140003480)
+
+### demo3
+
+[Open CASCADE+Qt：实现以鼠标为锚点缩放、平移、旋转](https://blog.csdn.net/qq_41666999/article/details/140003571)
+
+### demo4-OnePC
+
+[Open CASCADE+Qt：笔记本电脑外壳建模案例](https://blog.csdn.net/qq_41666999/article/details/140003637)
+
+### demo5
+
+[Open CASCADE+Qt：]()
 
 **如果本项目有帮到你，不妨请我喝杯奶茶**
 
