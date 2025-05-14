@@ -25,31 +25,34 @@ MeshVS_DataMapOfIntegerColor getMeshDataMap(std::vector<double> tt, double max, 
     int index = 0;
     for (double t : tt)
     {
-        a = (t - min) / (max - min);
-        // r = a;
-        // b = 1 - a;
-        // g = 1 - ((r - b) < 0 ? b - r : r - b);
-        // 根据归一化的值生成彩虹颜色
-        if (a <= 0.25) {
-            // 红到橙
-            r = 1.0;
-            g = a * 4;
-            b = 0.0;
-        } else if (a <= 0.5) {
-            // 橙到黄
-            r = 1.0 - (a - 0.25) * 4;
-            g = 1.0;
-            b = 0.0;
-        } else if (a <= 0.75) {
-            // 黄到绿
-            r = 0.0;
-            g = 1.0;
-            b = (a - 0.5) * 4;
+        // 归一化到[0,1]范围
+        double normalized = (t - min) / (max - min);
+
+        if (normalized < 0.2) {
+            // 紫色到蓝色
+            r = (128 - 128 * (normalized / 0.2))/255;
+            g = 0;
+            b = 1;
+        } else if (normalized < 0.4) {
+            // 蓝色到青色
+            r = 0;
+            g = (255 * ((normalized - 0.2) / 0.2))/255;
+            b = 1;
+        } else if (normalized < 0.6) {
+            // 青色到绿色
+            r = 0;
+            g = 1;
+            b = (255 - 255 * ((normalized - 0.4) / 0.2))/255;
+        } else if (normalized < 0.8) {
+            // 绿色到黄色
+            r = (255 * ((normalized - 0.6) / 0.2))/255;
+            g = 1;
+            b = 0;
         } else {
-            // 绿到蓝
-            r = 0.0;
-            g = 1.0 - (a - 0.75) * 4;
-            b = 1.0;
+            // 黄色到红色
+            r = 1;
+            g = (255 - 255 * ((normalized - 0.8) / 0.2))/255;
+            b = 0;
         }
         colormap.Bind(index + 1, Quantity_Color(r, g, b, Quantity_TOC_RGB));
         index++;
@@ -80,25 +83,18 @@ OCCWidget::OCCWidget(QWidget *parent)
     m_view->SetWindow(wind);
     if (!wind->IsMapped()) wind->Map();
 
-    Handle(MeshVS_Mesh) aMesh = new MeshVS_Mesh();
     MyDataSource* aDataSource = new MyDataSource();
+    Handle(MeshVS_Mesh) aMesh = new MeshVS_Mesh();
     aMesh->SetDataSource(aDataSource);
 
-    // 创建MeshVS_MeshPrsBuilder
-    // Handle(MeshVS_ElementalColorPrsBuilder) aBuilder = new MeshVS_ElementalColorPrsBuilder(aMesh, MeshVS_DMF_ElementalColorDataPrs| MeshVS_DMF_OCCMask);
-    // aBuilder->SetColor1(1, Quantity_NOC_RED);
-    // aMesh->AddBuilder(aBuilder, Standard_True);
     // aMesh->GetDrawer()->SetColor(MeshVS_DA_EdgeColor,Quantity_NOC_BLACK);//线颜色
-
     // aMesh->GetDrawer()->SetColor(MeshVS_DA_VectorColor,Quantity_NOC_BLUE);//点颜色
     // aMesh->GetDrawer()->SetColor(MeshVS_DA_InteriorColor, Quantity_NOC_BLUE);//体颜色
     // aMesh->GetDrawer()->SetBoolean(MeshVS_DA_ShowEdges, Standard_False);//隐藏边线
     // aMesh->GetDrawer()->SetBoolean(MeshVS_DA_DisplayNodes, Standard_True);//显示点
 
-    // MeshVS_DisplayModeFlags displayMode =  MeshVS_DMF_Shading;
-    // aMesh->SetDisplayMode(displayMode);
 
-    std::vector<double> tt{0, 255, 125};
+    std::vector<double> tt{50, 255, 125};
     MeshVS_DataMapOfIntegerColor colormap = getMeshDataMap(tt, 255, 0);
     Handle(MeshVS_NodalColorPrsBuilder) nodal = new MeshVS_NodalColorPrsBuilder(aMesh, MeshVS_DMF_NodalColorDataPrs | MeshVS_DMF_OCCMask);
     nodal->SetColors(colormap);
